@@ -1,0 +1,17 @@
+{
+  "Software Engineer": "Responsible for designing, developing, and maintaining software applications. Works closely with product and design teams to deliver high-quality features. Participates in code reviews, writes tests, and contributes to technical documentation.",
+
+  "Product Manager": "Responsible for defining the product vision and roadmap. Gathers requirements from stakeholders, prioritizes features, and coordinates with engineering and design to deliver value to customers. Tracks product performance and iterates based on data.",
+
+  "HR Specialist": "Responsible for managing recruitment, onboarding, and employee relations. Maintains HR records, supports performance review cycles, and ensures compliance with labor laws and internal policies.",
+
+  "DevOps Engineer": "Responsible for managing CI/CD pipelines, cloud infrastructure, and system reliability. Works with development teams to automate deployments, monitor system health, and ensure uptime and scalability.",
+
+  "QA Engineer": "Responsible for ensuring product quality through manual and automated testing. Writes and maintains test plans, identifies bugs, and works with developers to resolve issues before release.",
+
+  "UX Designer": "Responsible for designing intuitive and accessible user experiences. Conducts user research, creates wireframes and prototypes, and collaborates with engineering to implement designs.",
+
+  "Finance Analyst": "Responsible for financial reporting, budgeting, and analysis. Supports business decisions through data-driven insights and ensures compliance with financial regulations.",
+
+  "Sales Representative": "Responsible for identifying and pursuing new business opportunities. Manages client relationships, negotiates contracts, and works toward revenue targets."
+}

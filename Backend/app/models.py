@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, Text
 from app.db import Base
 
 class OnboardingTicket(Base):
@@ -14,3 +14,4 @@ class OnboardingTicket(Base):
     finance_status = Column(String, nullable=True)
     it_status = Column(String, nullable=True)
     notes = Column(String, nullable=True)
+    job_description = Column(Text, nullable=True)

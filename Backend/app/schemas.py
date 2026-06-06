@@ -25,6 +25,7 @@ class OnboardingResponse(BaseModel):
     finance_status: Optional[str]
     it_status: Optional[str]
     notes: Optional[str]
+    job_description: str
 
     class Config:
         from_attributes = True
@@ -38,3 +39,4 @@ class OnboardingUpdate(BaseModel):
     role: Optional[str] = None
     start_date: Optional[date] = None
     hardware_tier: Optional[HardwareTier] = None
+    job_description: Optional[str] = None
