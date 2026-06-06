@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db import get_db
 from app.models import OnboardingTicket
-from app.schemas import OnboardingCreate, OnboardingResponse, StatusUpdate
+from app.schemas import OnboardingCreate, OnboardingResponse, OnboardingUpdate, StatusUpdate
 
 router = APIRouter(prefix="/onboarding", tags=["Onboarding"])
 
@@ -104,6 +104,34 @@ def update_it_status(ticket_id: int, body: StatusUpdate, db: Session = Depends(g
         ticket.status = "Completed"
     elif body.status == "Rejected":
         ticket.status = "Needs Rework"
+
+    db.commit()
+    db.refresh(ticket)
+    return ticket
+
+@router.patch("/Tickets/{ticket_id}/resubmit", response_model=OnboardingResponse)
+def resubmit_ticket(ticket_id: int, body: OnboardingUpdate, db: Session = Depends(get_db)):
+    ticket = db.query(OnboardingTicket).filter(OnboardingTicket.id == ticket_id).first()
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+
+    if ticket.status != "Needs Rework":
+        raise HTTPException(status_code=400, detail="Only tickets with 'Needs Rework' status can be resubmitted")
+
+    if body.employee_name:
+        ticket.employee_name = body.employee_name
+    if body.role:
+        ticket.role = body.role
+    if body.start_date:
+        ticket.start_date = body.start_date
+    if body.hardware_tier:
+        ticket.hardware_tier = body.hardware_tier
+
+    ticket.status = "Waiting Manager"
+    ticket.manager_status = None
+    ticket.finance_status = None
+    ticket.it_status = None
+    ticket.notes = None
 
     db.commit()
     db.refresh(ticket)

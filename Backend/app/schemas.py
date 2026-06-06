@@ -32,3 +32,9 @@ class OnboardingResponse(BaseModel):
 class StatusUpdate(BaseModel):
     status: str
     notes: Optional[str] = None
+
+class OnboardingUpdate(BaseModel):
+    employee_name: Optional[str] = None
+    role: Optional[str] = None
+    start_date: Optional[date] = None
+    hardware_tier: Optional[HardwareTier] = None
