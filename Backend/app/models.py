@@ -1,0 +1,12 @@
+from sqlalchemy import Column, Integer, String, Date
+from app.db import Base
+
+class OnboardingTicket(Base):
+    __tablename__ = "onboarding_tickets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    employee_name = Column(String, nullable=False)
+    role = Column(String, nullable=False)
+    start_date = Column(Date, nullable=False)
+    hardware_tier = Column(String, nullable=False)  # "Standard" or "Premium"
+    status = Column(String, nullable=False, default="pending")
