@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from datetime import date
 from enum import Enum
@@ -19,6 +21,14 @@ class OnboardingResponse(BaseModel):
     start_date: date
     hardware_tier: str
     status: str
+    manager_status: Optional[str]
+    finance_status: Optional[str]
+    it_status: Optional[str]
+    notes: Optional[str]
 
     class Config:
         from_attributes = True
+
+class StatusUpdate(BaseModel):
+    status: str
+    notes: Optional[str] = None

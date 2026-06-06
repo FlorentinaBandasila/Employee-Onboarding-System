@@ -8,5 +8,9 @@ class OnboardingTicket(Base):
     employee_name = Column(String, nullable=False)
     role = Column(String, nullable=False)
     start_date = Column(Date, nullable=False)
-    hardware_tier = Column(String, nullable=False)  # "Standard" or "Premium"
-    status = Column(String, nullable=False, default="pending")
+    hardware_tier = Column(String, nullable=False)
+    status = Column(String, nullable=False, default="Pending")
+    manager_status = Column(String, nullable=True)
+    finance_status = Column(String, nullable=True)
+    it_status = Column(String, nullable=True)
+    notes = Column(String, nullable=True)
