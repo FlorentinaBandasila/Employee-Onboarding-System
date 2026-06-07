@@ -40,3 +40,20 @@ class OnboardingUpdate(BaseModel):
     start_date: Optional[date] = None
     hardware_tier: Optional[HardwareTier] = None
     job_description: Optional[str] = None
+
+
+class UserCreate(BaseModel):
+    full_name:  str
+    email:      str
+    department: str
+    role:       str
+
+class UserResponse(BaseModel):
+    id:         int
+    full_name:  str
+    email:      str
+    department: str
+    role:       str
+
+    class Config:
+        from_attributes = True
