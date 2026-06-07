@@ -9,7 +9,7 @@ class OnboardingTicket(Base):
     role = Column(String, nullable=False)
     start_date = Column(Date, nullable=False)
     hardware_tier = Column(String, nullable=False)
-    status = Column(String, nullable=False, default="Pending")
+    status = Column(String, nullable=False, default="Waiting Manager")
     manager_status = Column(String, nullable=True)
     finance_status = Column(String, nullable=True)
     it_status = Column(String, nullable=True)
