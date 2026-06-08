@@ -116,6 +116,22 @@ def update_it_status(ticket_id: int, body: StatusUpdate, db: Session = Depends(g
 
     if body.status == "Approved":
         ticket.status = "Completed"
+
+        # Generate company credentials
+        name_parts = ticket.employee_name.strip().lower().split()
+        first_name = name_parts[0]
+        last_name = name_parts[-1] if len(name_parts) > 1 else ""
+        email = f"{first_name}.{last_name}@company.com" if last_name else f"{first_name}@company.com"
+        password = "Welcome123!"
+
+        credentials_note = (
+            f"\n\n--- Account credentials ---\n"
+            f"Email: {email}\n"
+            f"Temporary password: {password}\n"
+            f"Note: The password must be changed on first login."
+        )
+        ticket.notes = (ticket.notes or "") + credentials_note
+
     elif body.status == "Rejected":
         ticket.status = "Needs Rework"
 

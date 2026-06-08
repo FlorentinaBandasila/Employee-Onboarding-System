@@ -45,14 +45,19 @@ function formatDate(dateStr: string) {
 
 function ProgressBar({ ticket }: { ticket: Ticket }) {
   const steps = [
-    ticket.manager_status === "Approved",
-    ticket.finance_status === "Approved",
-    ticket.it_status === "Approved",
+    { label: "Manager", done: ticket.manager_status === "Approved" },
+    { label: "Finance", done: ticket.finance_status === "Approved" },
+    { label: "IT", done: ticket.it_status === "Approved" },
   ];
+
   return (
     <div className="flex gap-1 items-center">
-      {steps.map((done, i) => (
-        <div key={i} className={`h-1.5 w-8 rounded-full ${done ? "bg-blue-500" : "bg-slate-600"}`} />
+      {steps.map(({ label, done }) => (
+        <div
+          key={label}
+          title={`${label}: ${done ? "Approved" : "Waiting"}`}
+          className={`h-1.5 w-8 rounded-full ${done ? "bg-blue-500" : "bg-slate-600"}`}
+        />
       ))}
     </div>
   );
@@ -131,15 +136,13 @@ export default function TicketsTable({ tickets, onRefresh }: Props) {
                   </td>
                   <td className="px-6 py-4"><ProgressBar ticket={ticket} /></td>
                   <td className="px-6 py-4">
-                    {ticket.status !== "Completed" && (
-                      <button
+                    <button
                         onClick={() => setSelected(ticket)}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-                      >
-                        Review
-                      </button>
-                    )}
-                  </td>
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors w-20 text-center"
+                    >
+                        {ticket.status === "Completed" ? "View" : "Review"}
+                    </button>
+                    </td>
                 </tr>
               );
             })}

@@ -96,10 +96,12 @@ export default function ReviewModal({ ticket, onClose, onUpdated }: Props) {
         </div>
 
         {ticket.notes && (
-          <div className="mb-6">
+        <div className="mb-6">
             <p className="text-xs uppercase text-slate-500 mb-1">Notes</p>
-            <p className="text-slate-800 bg-slate-50 rounded-lg p-3 text-sm">{ticket.notes}</p>
-          </div>
+            <p className="text-slate-800 bg-slate-50 rounded-lg p-3 text-sm whitespace-pre-wrap">
+            {ticket.notes}
+            </p>
+        </div>
         )}
 
         {ticket.job_description && (
