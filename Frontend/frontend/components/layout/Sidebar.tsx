@@ -4,17 +4,18 @@ import { useUser } from "@/lib/user-context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import CreateTicketModal from "@/components/ui/CreateTicketModal";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "All Tickets", href: "/tickets" },
-  { label: "New Ticket", href: "/create-ticket" },
 ];
 
 export default function Sidebar() {
   const { currentUser, setCurrentUser, users } = useUser();
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
 
   return (
     <aside className="w-60 min-h-screen bg-[#0f1117] px-4 py-8 flex flex-col justify-between">
@@ -36,6 +37,19 @@ export default function Sidebar() {
               {label}
             </Link>
           ))}
+          <button
+          onClick={() => setCreateOpen(true)}
+          className="flex items-center px-4 py-2.5 rounded-lg text-sm text-slate-400 hover:bg-[#1c2030] hover:text-white transition-colors"
+        >
+          New Ticket
+        </button>
+
+        {createOpen && (
+          <CreateTicketModal
+            onClose={() => setCreateOpen(false)}
+            onCreated={() => window.location.reload()}
+          />
+        )}
         </nav>
       </div>
 

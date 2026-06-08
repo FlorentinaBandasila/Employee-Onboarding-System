@@ -24,13 +24,13 @@ interface Props {
 }
 
 const DEPT_ENDPOINT: Record<string, string> = {
-  Manager: "manager-status",
+  Management: "manager-status",
   Finance: "finance-status",
   IT: "it-status",
 };
 
 const DEPT_STATUS: Record<string, string> = {
-  Manager: "Waiting Manager",
+  Management: "Waiting Manager",
   Finance: "Waiting Finance",
   IT: "Waiting IT",
 };

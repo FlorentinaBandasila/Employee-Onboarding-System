@@ -7,7 +7,7 @@ const FILTERS = ["All", "Needs my action", "In progress", "Needs rework", "Compl
 
 const ACTION_STATUS: Record<string, string> = {
   HR: "Needs Rework",
-  Manager: "Waiting Manager",
+  Management: "Waiting Manager",
   Finance: "Waiting Finance",
   IT: "Waiting IT",
 };

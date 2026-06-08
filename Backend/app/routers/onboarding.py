@@ -29,7 +29,7 @@ def create_ticket(body: OnboardingCreate, db: Session = Depends(get_db)):
 # Get all onboarding tickets
 @router.get("/Tickets", response_model=list[OnboardingResponse])
 def get_tickets(db: Session = Depends(get_db)):
-    return db.query(OnboardingTicket).all()
+    return db.query(OnboardingTicket).order_by(OnboardingTicket.id.desc()).all()
 
 # Get a onboarding ticket by ID
 @router.get("/Tickets/{ticket_id}", response_model=OnboardingResponse)
