@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import TicketsTable, { Ticket } from "@/components/ui/TicketsTable";
+import { useUser } from "@/lib/user-context";
 
 const FILTERS = ["All", "Needs my action", "In progress", "Needs rework", "Completed"];
 
@@ -13,25 +14,15 @@ const ACTION_STATUS: Record<string, string> = {
 };
 
 export default function TicketsPage() {
+  const { currentUser } = useUser();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [activeFilter, setActiveFilter] = useState("All");
-  const [currentUser, setCurrentUser] = useState<{ department: string } | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:8000/onboarding/Tickets")
       .then((r) => r.json())
       .then(setTickets)
       .catch(() => {});
-
-    const stored = localStorage.getItem("currentUser");
-    if (stored) setCurrentUser(JSON.parse(stored));
-
-    const handler = () => {
-      const stored = localStorage.getItem("currentUser");
-      if (stored) setCurrentUser(JSON.parse(stored));
-    };
-    window.addEventListener("userChanged", handler);
-    return () => window.removeEventListener("userChanged", handler);
   }, []);
 
   const filtered = tickets.filter((t) => {
