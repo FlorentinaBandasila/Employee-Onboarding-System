@@ -20,6 +20,7 @@ def create_ticket(body: OnboardingCreate, db: Session = Depends(get_db)):
         hardware_tier=body.hardware_tier,
         job_description=JOB_DESCRIPTIONS.get(body.role),
         notes=body.notes,
+        finance_status="Not Required" if body.hardware_tier == "Standard" else None,
     )
     db.add(ticket)
     db.commit()

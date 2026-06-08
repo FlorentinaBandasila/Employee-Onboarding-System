@@ -45,20 +45,26 @@ function formatDate(dateStr: string) {
 
 function ProgressBar({ ticket }: { ticket: Ticket }) {
   const steps = [
-    { label: "Manager", done: ticket.manager_status === "Approved" },
-    { label: "Finance", done: ticket.finance_status === "Approved" },
-    { label: "IT", done: ticket.it_status === "Approved" },
+    { label: "Manager", status: ticket.manager_status },
+    { label: "Finance", status: ticket.finance_status },
+    { label: "IT", status: ticket.it_status },
   ];
 
   return (
     <div className="flex gap-1 items-center">
-      {steps.map(({ label, done }) => (
-        <div
-          key={label}
-          title={`${label}: ${done ? "Approved" : "Waiting"}`}
-          className={`h-1.5 w-8 rounded-full ${done ? "bg-blue-500" : "bg-slate-600"}`}
-        />
-      ))}
+      {steps.map(({ label, status }) => {
+        const done = status === "Approved";
+        const notRequired = status === "Not Required";
+        return (
+          <div
+            key={label}
+            title={`${label}: ${status ?? "Pending"}`}
+            className={`h-1.5 w-8 rounded-full ${
+              done ? "bg-blue-500" : notRequired ? "bg-slate-300" : "bg-slate-600"
+            }`}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -83,7 +89,7 @@ export default function TicketsTable({ tickets, onRefresh }: Props) {
 
   return (
     <>
-      <div className="rounded-xl overflow-hidden border border-slate-500 max-w-[1300px] overflow-y-scroll h-129">
+      <div className="rounded-xl overflow-hidden border border-slate-500 max-full overflow-y-scroll h-129">
         <table className="w-full text-sm table-fixed">
           <colgroup>
             <col className="w-20" />

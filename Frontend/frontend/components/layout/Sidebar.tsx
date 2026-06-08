@@ -37,12 +37,14 @@ export default function Sidebar() {
               {label}
             </Link>
           ))}
+          {currentUser?.department === "HR" && (
           <button
-          onClick={() => setCreateOpen(true)}
-          className="flex items-center px-4 py-2.5 rounded-lg text-sm text-slate-400 hover:bg-[#1c2030] hover:text-white transition-colors"
-        >
-          New Ticket
-        </button>
+            onClick={() => setCreateOpen(true)}
+            className="flex items-center px-4 py-2.5 rounded-lg text-sm text-slate-400 hover:bg-[#1c2030] hover:text-white transition-colors"
+          >
+            New Ticket
+          </button>
+        )}
 
         {createOpen && (
           <CreateTicketModal
