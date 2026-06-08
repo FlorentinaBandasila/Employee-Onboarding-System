@@ -13,6 +13,7 @@ class OnboardingCreate(BaseModel):
     role: str
     start_date: date
     hardware_tier: HardwareTier
+    notes: Optional[str] = None
 
 class OnboardingResponse(BaseModel):
     id: int

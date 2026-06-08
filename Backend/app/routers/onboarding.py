@@ -18,7 +18,8 @@ def create_ticket(body: OnboardingCreate, db: Session = Depends(get_db)):
         role=body.role,
         start_date=body.start_date,
         hardware_tier=body.hardware_tier,
-        job_description=JOB_DESCRIPTIONS.get(body.role)
+        job_description=JOB_DESCRIPTIONS.get(body.role),
+        notes=body.notes,
     )
     db.add(ticket)
     db.commit()

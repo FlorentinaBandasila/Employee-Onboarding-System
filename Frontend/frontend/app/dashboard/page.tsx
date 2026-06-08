@@ -14,6 +14,8 @@ interface Ticket {
   manager_status: string | null;
   finance_status: string | null;
   it_status: string | null;
+  notes: string;
+  job_description: string;
 }
 
 const ACTION_STATUS: Record<string, string> = {

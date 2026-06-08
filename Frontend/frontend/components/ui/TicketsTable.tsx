@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import ReviewModal from "./ReviewModal";
 
 export interface Ticket {
   id: number;
@@ -10,11 +12,18 @@ export interface Ticket {
   manager_status: string | null;
   finance_status: string | null;
   it_status: string | null;
+  notes: string | null;
+  job_description: string | null;
+}
+
+interface Props {
+  tickets: Ticket[];
+  onRefresh?: () => void;
 }
 
 const AVATAR_COLORS = [
-  "bg-purple-500", "bg-blue-500", "bg-green-500",
-  "bg-red-500", "bg-yellow-500", "bg-pink-500",
+  "bg-purple-200", "bg-blue-100", "bg-green-100",
+  "bg-red-100", "bg-yellow-100", "bg-pink-100",
 ];
 
 function getInitials(name: string) {
@@ -51,76 +60,100 @@ function ProgressBar({ ticket }: { ticket: Ticket }) {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    "Waiting Manager": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    "Waiting Finance": "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-    "Waiting IT": "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    "Needs Rework": "bg-red-500/10 text-red-400 border-red-500/20",
-    "Completed": "bg-green-500/10 text-green-400 border-green-500/20",
+    "Waiting Manager": "bg-blue-500 border-blue-500/20",
+    "Waiting Finance": "bg-yellow-500 border-yellow-500/20",
+    "Waiting IT": "bg-purple-500 border-purple-500/20",
+    "Needs Rework": "bg-red-500 border-red-500/20",
+    "Completed": "bg-green-600 border-green-500/20",
   };
   return (
     <span className={`text-xs px-3 py-1 rounded-full border ${map[status] ?? "bg-slate-500/10 text-black"}`}>
-      ● {status}
+       {status}
     </span>
   );
 }
 
-export default function TicketsTable({ tickets }: { tickets: Ticket[] }) {
+export default function TicketsTable({ tickets, onRefresh }: Props) {
+  const [selected, setSelected] = useState<Ticket | null>(null);
+
   return (
-    <div className="rounded-xl overflow-hidden border border-slate-500 max-w-[1300px] overflow-y-scroll h-129">
-      <table className="w-full text-sm table-fixed">
-        <colgroup>
-          <col className="w-20" />
-          <col className="w-64" />
-          <col className="w-40" />
-          <col className="w-32" />
-          <col className="w-32" />
-          <col className="w-40" />
-        </colgroup>
-        <thead>
-          <tr className="text-black text-xs uppercase border-b border-slate-800">
-            <th className="text-left px-6 py-3">Ticket</th>
-            <th className="text-left px-6 py-3">Employee</th>
-            <th className="text-left px-6 py-3">Status</th>
-            <th className="text-left px-6 py-3">Hardware</th>
-            <th className="text-left px-6 py-3">Start Date</th>
-            <th className="text-left px-6 py-3">Progress</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tickets.map((ticket) => {
-            const { formatted, diffDays } = formatDate(ticket.start_date);
-            return (
-              <tr key={ticket.id} className="border-b border-slate-800 hover:bg-slate-800/30 transition-colors">
-                <td className="px-6 py-4 text-black">#{ticket.id}</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-black text-xs font-bold ${getAvatarColor(ticket.employee_name)}`}>
-                      {getInitials(ticket.employee_name)}
+    <>
+      <div className="rounded-xl overflow-hidden border border-slate-500 max-w-[1300px] overflow-y-scroll h-129">
+        <table className="w-full text-sm table-fixed">
+          <colgroup>
+            <col className="w-20" />
+            <col className="w-64" />
+            <col className="w-40" />
+            <col className="w-32" />
+            <col className="w-32" />
+            <col className="w-40" />
+            <col className="w-28" />
+          </colgroup>
+          <thead className="sticky top-0 bg-white z-10">
+            <tr className="text-black text-xs uppercase border-b border-slate-800">
+              <th className="text-left px-6 py-3">Ticket</th>
+              <th className="text-left px-6 py-3">Employee</th>
+              <th className="text-left px-6 py-3">Status</th>
+              <th className="text-left px-6 py-3">Hardware</th>
+              <th className="text-left px-6 py-3">Start Date</th>
+              <th className="text-left px-6 py-3">Progress</th>
+              <th className="text-left px-6 py-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {tickets.map((ticket) => {
+              const { formatted, diffDays } = formatDate(ticket.start_date);
+              return (
+                <tr key={ticket.id} className="border-b border-slate-800 hover:bg-slate-800/30 transition-colors">
+                  <td className="px-6 py-4 text-black">#{ticket.id}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-black text-xs font-bold ${getAvatarColor(ticket.employee_name)}`}>
+                        {getInitials(ticket.employee_name)}
+                      </div>
+                      <div>
+                        <div className="text-black font-medium">{ticket.employee_name}</div>
+                        <div className="text-black text-xs">{ticket.role}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-black font-medium">{ticket.employee_name}</div>
-                      <div className="text-black text-xs">{ticket.role}</div>
+                  </td>
+                  <td className="px-6 py-4"><StatusBadge status={ticket.status} /></td>
+                  <td className="px-6 py-4">
+                    <span className="text-black border border-slate-700 px-3 py-1 rounded-full text-xs">
+                      {ticket.hardware_tier}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-black">{formatted}</div>
+                    <div className="text-black text-xs">
+                      {diffDays > 0 ? `in ${diffDays}d` : diffDays === 0 ? "today" : `${Math.abs(diffDays)}d ago`}
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4"><StatusBadge status={ticket.status} /></td>
-                <td className="px-6 py-4">
-                  <span className="text-black border border-slate-700 px-3 py-1 rounded-full text-xs">
-                    {ticket.hardware_tier}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-black">{formatted}</div>
-                  <div className="text-black text-xs">
-                    {diffDays > 0 ? `in ${diffDays}d` : diffDays === 0 ? "today" : `${Math.abs(diffDays)}d ago`}
-                  </div>
-                </td>
-                <td className="px-6 py-4"><ProgressBar ticket={ticket} /></td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                  </td>
+                  <td className="px-6 py-4"><ProgressBar ticket={ticket} /></td>
+                  <td className="px-6 py-4">
+                    {ticket.status !== "Completed" && (
+                      <button
+                        onClick={() => setSelected(ticket)}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                      >
+                        Review
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {selected && (
+        <ReviewModal
+          ticket={selected}
+          onClose={() => setSelected(null)}
+          onUpdated={() => onRefresh?.()}
+        />
+      )}
+    </>
   );
 }
