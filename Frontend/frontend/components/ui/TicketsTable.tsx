@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ReviewModal from "./ReviewModal";
+import { useUser } from "@/lib/user-context";
 
 export interface Ticket {
   id: number;
@@ -20,6 +21,12 @@ interface Props {
   tickets: Ticket[];
   onRefresh?: () => void;
 }
+
+const DEPT_STATUS: Record<string, string> = {
+  Management: "Waiting Manager",
+  Finance: "Waiting Finance",
+  IT: "Waiting IT",
+};
 
 const AVATAR_COLORS = [
   "bg-purple-200", "bg-blue-100", "bg-green-100",
@@ -79,13 +86,21 @@ function StatusBadge({ status }: { status: string }) {
   };
   return (
     <span className={`text-xs px-3 py-1 rounded-full border ${map[status] ?? "bg-slate-500/10 text-black"}`}>
-       {status}
+      {status}
     </span>
   );
 }
 
 export default function TicketsTable({ tickets, onRefresh }: Props) {
   const [selected, setSelected] = useState<Ticket | null>(null);
+  const { currentUser } = useUser();
+
+  function getButtonLabel(ticket: Ticket): string {
+    if (ticket.status === "Completed") return "View";
+    if (ticket.status === "Needs Rework" && currentUser?.department === "HR") return "Review";
+    if (currentUser && DEPT_STATUS[currentUser.department] === ticket.status) return "Review";
+    return "View";
+  }
 
   return (
     <>
@@ -143,12 +158,16 @@ export default function TicketsTable({ tickets, onRefresh }: Props) {
                   <td className="px-6 py-4"><ProgressBar ticket={ticket} /></td>
                   <td className="px-6 py-4">
                     <button
-                        onClick={() => setSelected(ticket)}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors w-20 text-center"
+                    onClick={() => setSelected(ticket)}
+                    className={`text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors w-20 text-center ${
+                        getButtonLabel(ticket) === "Review"
+                        ? "bg-yellow-500 hover:bg-yellow-600"
+                        : "bg-indigo-600 hover:bg-indigo-700"
+                    }`}
                     >
-                        {ticket.status === "Completed" ? "View" : "Review"}
+                    {getButtonLabel(ticket)}
                     </button>
-                    </td>
+                  </td>
                 </tr>
               );
             })}
