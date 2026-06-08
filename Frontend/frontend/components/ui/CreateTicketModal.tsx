@@ -153,7 +153,7 @@ export default function CreateTicketModal({ onClose, onCreated }: Props) {
             disabled={loading}
             className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
           >
-            + {loading ? "Submitting..." : "Submit for review"}
+            {loading ? "Submitting..." : "Submit for review"}
           </button>
         </div>
       </div>

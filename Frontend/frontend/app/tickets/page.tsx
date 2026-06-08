@@ -18,12 +18,14 @@ export default function TicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [activeFilter, setActiveFilter] = useState("All");
 
-  useEffect(() => {
-    fetch("http://localhost:8000/onboarding/Tickets")
-      .then((r) => r.json())
-      .then(setTickets)
-      .catch(() => {});
-  }, []);
+  const fetchTickets = () => {
+  fetch("http://localhost:8000/onboarding/Tickets")
+    .then((r) => r.json())
+    .then(setTickets)
+    .catch(() => {});
+};
+
+useEffect(() => { fetchTickets(); }, []);
 
   const filtered = tickets.filter((t) => {
     if (activeFilter === "All") return true;
@@ -66,7 +68,7 @@ export default function TicketsPage() {
         ))}
       </div>
 
-      <TicketsTable tickets={filtered} />
+      <TicketsTable tickets={filtered} onRefresh={fetchTickets} />
     </div>
   );
 }
