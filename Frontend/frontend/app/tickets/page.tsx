@@ -1,17 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import TicketsTable, { Ticket } from "@/components/ui/TicketsTable";
+import TicketsTable from "@/components/ui/TicketsTable";
 import { useUser } from "@/lib/user-context";
-
-const FILTERS = ["All", "Needs my action", "In progress", "Needs rework", "Completed"];
-
-const ACTION_STATUS: Record<string, string> = {
-  HR: "Needs Rework",
-  Management: "Waiting Manager",
-  Finance: "Waiting Finance",
-  IT: "Waiting IT",
-};
+import { ACTION_STATUS, FILTERS } from "@/lib/constants";
+import { getTickets } from "@/lib/api";
 
 export default function TicketsPage() {
   const { currentUser } = useUser();
@@ -20,11 +13,8 @@ export default function TicketsPage() {
   const [search, setSearch] = useState("");
 
   const fetchTickets = () => {
-    fetch("http://localhost:8000/onboarding/Tickets")
-      .then((r) => r.json())
-      .then(setTickets)
-      .catch(() => {});
-  };
+  getTickets().then(setTickets).catch(() => {});
+};
 
   useEffect(() => { fetchTickets(); }, []);
 

@@ -3,49 +3,13 @@
 import { useState } from "react";
 import { useUser } from "@/lib/user-context";
 import { generateTicketPdf } from "@/lib/pdf";
-
-interface Ticket {
-  id: number;
-  employee_name: string;
-  role: string;
-  start_date: string;
-  hardware_tier: string;
-  status: string;
-  manager_status: string | null;
-  finance_status: string | null;
-  it_status: string | null;
-  notes: string | null;
-  job_description: string | null;
-}
-
-const ROLES = [
-  "Software Engineer",
-  "Product Manager",
-  "HR Specialist",
-  "DevOps Engineer",
-  "QA Engineer",
-  "UX Designer",
-  "Finance Analyst",
-  "Sales Representative",
-];
+import { DEPT_ENDPOINT, DEPT_STATUS, ROLES } from "@/lib/constants";
 
 interface Props {
   ticket: Ticket;
   onClose: () => void;
   onUpdated: () => void;
 }
-
-const DEPT_ENDPOINT: Record<string, string> = {
-  Management: "manager-status",
-  Finance: "finance-status",
-  IT: "it-status",
-};
-
-const DEPT_STATUS: Record<string, string> = {
-  Management: "Waiting Manager",
-  Finance: "Waiting Finance",
-  IT: "Waiting IT",
-};
 
 export default function ReviewModal({ ticket, onClose, onUpdated }: Props) {
   const { currentUser } = useUser();

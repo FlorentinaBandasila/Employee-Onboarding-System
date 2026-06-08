@@ -3,45 +3,22 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/lib/user-context";
 import TicketsTable from "@/components/ui/TicketsTable";
-
-interface Ticket {
-  id: number;
-  employee_name: string;
-  role: string;
-  start_date: string;
-  hardware_tier: string;
-  status: string;
-  manager_status: string | null;
-  finance_status: string | null;
-  it_status: string | null;
-  notes: string;
-  job_description: string;
-}
-
-const COLORS: Record<string, string> = {
-  "Active onboardings": "bg-blue-100",
-  "Needs your action": "bg-yellow-100",
-  "Needs rework": "bg-red-100",
-  "Completed": "bg-green-100",
-};
-
-const ACTION_STATUS: Record<string, string> = {
-  HR: "Needs Rework",
-  Management: "Waiting Manager",
-  Finance: "Waiting Finance",
-  IT: "Waiting IT",
-};
+import { getTickets } from "@/lib/api";
+import { ACTION_STATUS, COLORS } from "@/lib/constants";
 
 export default function DashboardPage() {
   const { currentUser } = useUser();
   const [tickets, setTickets] = useState<Ticket[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/onboarding/Tickets")
-      .then((r) => r.json())
-      .then(setTickets)
-      .catch(() => {});
-  }, []);
+  getTickets().then(setTickets).catch(() => {});
+}, []);
+
+const fetchTickets = () => {
+  getTickets().then(setTickets).catch(() => {});
+};
+
+useEffect(() => { fetchTickets(); }, []);
 
   const active = tickets.filter(
     (t) => t.status !== "Completed" && t.status !== "Needs Rework"
@@ -76,7 +53,7 @@ export default function DashboardPage() {
         </div>
       ))}
       </div>
-      <TicketsTable tickets={myTickets} />
+      <TicketsTable tickets={myTickets} onRefresh={fetchTickets} />
     </div>
   );
 }

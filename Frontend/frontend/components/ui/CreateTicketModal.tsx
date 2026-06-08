@@ -1,17 +1,8 @@
 "use client";
 
+import { createTicket } from "@/lib/api";
+import { ROLES } from "@/lib/constants";
 import { useState } from "react";
-
-const ROLES = [
-  "Software Engineer",
-  "Product Manager",
-  "HR Specialist",
-  "DevOps Engineer",
-  "QA Engineer",
-  "UX Designer",
-  "Finance Analyst",
-  "Sales Representative",
-];
 
 interface Props {
   onClose: () => void;
@@ -30,27 +21,22 @@ export default function CreateTicketModal({ onClose, onCreated }: Props) {
   const [error, setError] = useState("");
 
   async function handleSubmit() {
-    if (!form.employee_name || !form.start_date) {
-      setError("Please fill in all required fields");
-      return;
-    }
-    setError("");
-    setLoading(true);
-    try {
-      const res = await fetch("http://localhost:8000/onboarding/Tickets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error("Failed to create ticket");
-      onCreated();
-      onClose();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
+  if (!form.employee_name || !form.start_date) {
+    setError("Please fill in all required fields");
+    return;
   }
+  setError("");
+  setLoading(true);
+  try {
+    await createTicket(form);
+    onCreated();
+    onClose();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+}
 
   return (
     <div

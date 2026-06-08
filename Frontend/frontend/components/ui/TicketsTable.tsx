@@ -2,36 +2,12 @@
 import { useState } from "react";
 import ReviewModal from "./ReviewModal";
 import { useUser } from "@/lib/user-context";
-
-export interface Ticket {
-  id: number;
-  employee_name: string;
-  role: string;
-  start_date: string;
-  hardware_tier: string;
-  status: string;
-  manager_status: string | null;
-  finance_status: string | null;
-  it_status: string | null;
-  notes: string | null;
-  job_description: string | null;
-}
+import { AVATAR_COLORS, DEPT_STATUS } from "@/lib/constants";
 
 interface Props {
   tickets: Ticket[];
   onRefresh?: () => void;
 }
-
-const DEPT_STATUS: Record<string, string> = {
-  Management: "Waiting Manager",
-  Finance: "Waiting Finance",
-  IT: "Waiting IT",
-};
-
-const AVATAR_COLORS = [
-  "bg-purple-200", "bg-blue-100", "bg-green-100",
-  "bg-red-100", "bg-yellow-100", "bg-pink-100",
-];
 
 function getInitials(name: string) {
   return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
@@ -177,7 +153,7 @@ export default function TicketsTable({ tickets, onRefresh }: Props) {
 
       {selected && (
         <ReviewModal
-          ticket={selected}
+          ticket={selected as any}
           onClose={() => setSelected(null)}
           onUpdated={() => onRefresh?.()}
         />
