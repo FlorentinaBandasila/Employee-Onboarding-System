@@ -17,17 +17,20 @@ export default function TicketsPage() {
   const { currentUser } = useUser();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [search, setSearch] = useState("");
 
   const fetchTickets = () => {
-  fetch("http://localhost:8000/onboarding/Tickets")
-    .then((r) => r.json())
-    .then(setTickets)
-    .catch(() => {});
-};
+    fetch("http://localhost:8000/onboarding/Tickets")
+      .then((r) => r.json())
+      .then(setTickets)
+      .catch(() => {});
+  };
 
-useEffect(() => { fetchTickets(); }, []);
+  useEffect(() => { fetchTickets(); }, []);
 
   const filtered = tickets.filter((t) => {
+    if (search && !t.employee_name.toLowerCase().includes(search.toLowerCase())) return false;
+
     if (activeFilter === "All") return true;
     if (activeFilter === "Needs my action")
       return currentUser ? t.status === ACTION_STATUS[currentUser.department] : false;
@@ -52,20 +55,30 @@ useEffect(() => { fetchTickets(); }, []);
     <div>
       <h1 className="text-2xl font-bold text-black mb-6">All Tickets</h1>
 
-      <div className="flex gap-2 mb-6">
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            onClick={() => setActiveFilter(f)}
-            className={`px-4 py-1.5 rounded-full text-sm transition-colors border
-              ${activeFilter === f
-                ? "text-black border-slate-700 hover:border-slate-500 hover:text-black"
-                : "bg-transparent text-black border-white font-medium"
-              }`}
-          >
-            {f} <span className="ml-1 opacity-60">{counts[f]}</span>
-          </button>
-        ))}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex gap-2">
+          {FILTERS.map((f) => (
+            <button
+              key={f}
+              onClick={() => setActiveFilter(f)}
+              className={`px-4 py-1.5 rounded-full text-sm transition-colors border
+                ${activeFilter === f
+                  ? "text-black border-slate-700 hover:border-slate-500 hover:text-black"
+                  : "bg-transparent text-black border-white font-medium"
+                }`}
+            >
+              {f} <span className="ml-1 opacity-60">{counts[f]}</span>
+            </button>
+          ))}
+        </div>
+
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search employee..."
+          className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-64 focus:outline-none focus:border-indigo-500"
+        />
       </div>
 
       <TicketsTable tickets={filtered} onRefresh={fetchTickets} />

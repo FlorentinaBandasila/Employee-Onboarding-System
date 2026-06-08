@@ -18,7 +18,7 @@ export default function Sidebar() {
   const [createOpen, setCreateOpen] = useState(false);
 
   return (
-    <aside className="w-60 min-h-screen bg-[#0f1117] px-4 py-8 flex flex-col justify-between">
+    <aside className="w-60 min-h-screen bg-black px-4 py-8 flex flex-col justify-between">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col items-center gap-2">
           <span className="text-white font-bold text-lg">OnboardSync</span>
@@ -75,12 +75,13 @@ export default function Sidebar() {
           </div>
         )}
         <button
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="w-full text-left px-4 py-3 rounded-lg hover:bg-[#1c2030] transition-colors"
-        >
-          <div className="text-sm text-white font-medium">{currentUser?.full_name ?? "Loading..."}</div>
-          <div className="text-xs text-slate-500 mt-0.5">Switch user</div>
-        </button>
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        className="w-full text-left px-4 py-3 rounded-lg hover:bg-[#1c2030] transition-colors"
+      >
+        <div className="text-sm text-white font-medium">{currentUser?.full_name ?? "Loading..."}</div>
+        <div className="text-xs text-slate-400 mt-0.5">{currentUser?.role ?? ""}</div>
+        <div className="text-xs text-slate-500 mt-0.5">Switch user</div>
+      </button>
       </div>
     </aside>
   );

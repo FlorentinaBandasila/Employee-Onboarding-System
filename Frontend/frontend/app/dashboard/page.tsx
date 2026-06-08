@@ -18,6 +18,13 @@ interface Ticket {
   job_description: string;
 }
 
+const COLORS: Record<string, string> = {
+  "Active onboardings": "bg-blue-100",
+  "Needs your action": "bg-yellow-100",
+  "Needs rework": "bg-red-100",
+  "Completed": "bg-green-100",
+};
+
 const ACTION_STATUS: Record<string, string> = {
   HR: "Needs Rework",
   Management: "Waiting Manager",
@@ -62,12 +69,12 @@ export default function DashboardPage() {
     <div>
       <div className="grid grid-cols-4 gap-4 mb-4 pt-4">
         {cards.map(({ label, value, sub }) => (
-          <div key={label} className="bg-blue-50 rounded-xl p-4">
-  <p className="text-slate-600 text-sm mb-1">{label}</p>
-  <p className="text-slate-900 text-3xl font-bold mb-1">{value}</p>
-  <p className="text-slate-500 text-xs">{sub}</p>
-</div>
-        ))}
+        <div key={label} className={`${COLORS[label]} rounded-xl p-4`}>
+          <p className="text-slate-600 text-sm mb-1">{label}</p>
+          <p className="text-slate-900 text-3xl font-bold mb-1">{value}</p>
+          <p className="text-slate-500 text-xs">{sub}</p>
+        </div>
+      ))}
       </div>
       <TicketsTable tickets={myTickets} />
     </div>

@@ -127,6 +127,7 @@ def update_it_status(ticket_id: int, body: StatusUpdate, db: Session = Depends(g
 
         credentials_note = (
             f"\n\n--- Account credentials ---\n"
+            f"Laptop configuration is DONE\n"
             f"Email: {email}\n"
             f"Temporary password: {password}\n"
             f"Note: The password must be changed on first login."
